@@ -1,0 +1,29 @@
+---
+- name: Uninstall Galera Packages
+  apt:
+    name: "{{ item }}"
+    force_apt_get: yes
+    purge: yes
+    state: absent
+  with_items:
+    - mysql-common
+    - mariadb-common
+    - mariadb-server-{{ galera_version_major }}.{{ galera_version_minor }}
+    - mariadb-client-{{ galera_version_major }}.{{ galera_version_minor }}
+    - galera
+  when:
+    - galera_distribution == 'mariadb-org'
+
+- name: Uninstall Galera Repository
+  file:
+    path: "/etc/apt/sources.list.d/mariadb.list"
+    state: absent
+  when:
+    - galera_distribution == 'mariadb-org'
+
+- name: Uninstall Galera Keyring
+  apt_key:
+    id: '0xF1656F24C74CD1D8'
+    state: absent
+  when:
+    - galera_distribution == 'mariadb-org'

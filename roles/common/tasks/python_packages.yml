@@ -1,0 +1,11 @@
+---
+- name: Install Python PIP Packages
+  apt:
+    name: "{{ item }}"
+    force_apt_get: yes
+    update_cache: yes
+    state: present
+  with_items:
+    - python-software-properties
+    - python-pip
+    - python-mysqldb

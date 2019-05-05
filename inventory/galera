@@ -1,0 +1,13 @@
+[all:vars]
+galera_version_major=10
+galera_version_minor=2
+galera_root_password=root
+
+[galera_node]
+10.10.250.13
+10.10.250.14
+10.10.250.15
+
+[galera_lb]
+10.10.250.11
+10.10.250.12

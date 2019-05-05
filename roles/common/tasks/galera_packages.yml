@@ -1,0 +1,68 @@
+---
+- name: Install Galera Keyring
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: '0xF1656F24C74CD1D8'
+    state: present
+  when:
+    - galera_distribution == 'mariadb-org'
+
+- name: Install Galera Repository
+  template:
+    src: mariadb.list.j2
+    dest: /etc/apt/sources.list.d/mariadb.list
+    owner: root
+    group: root
+    mode: 0644
+  when:
+    - galera_distribution == 'mariadb-org'
+
+- name: Install Galera Packages
+  apt:
+    name: "{{ item }}"
+    force_apt_get: yes
+    update_cache: yes
+    dpkg_options: "force-confdef,force-confold,force-confmiss"
+    state: present
+  with_items:
+    - mysql-common
+    - mariadb-common
+    - mariadb-server-{{ galera_version_major }}.{{ galera_version_minor }}
+    - mariadb-client-{{ galera_version_major }}.{{ galera_version_minor }}
+    - galera
+  when:
+    - galera_distribution == 'mariadb-org'
+
+- name: Install Galera Cluster Check Packages
+  apt:
+    name: "{{ item }}"
+    force_apt_get: yes
+    update_cache: yes
+    dpkg_options: "force-confdef,force-confold,force-confmiss"
+    state: present
+  with_items:
+    - xinetd
+
+- name: Install Galera Cluster Check Scripts
+  template:
+    src: clustercheck.j2
+    dest: /usr/bin/clustercheck
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Install Galera Cluster Check Configurations
+  template:
+    src: mysqlchk.j2
+    dest: /etc/xinetd.d/mysqlchk
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable Galera Cluster Check as Know Services
+  lineinfile:
+    path: /etc/services
+    insertafter: '^# Local services'
+    line: 'mysqlchk    9200/tcp      # MySQL Check'
+    create: yes
+    state: present
