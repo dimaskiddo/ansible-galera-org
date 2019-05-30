@@ -1,0 +1,31 @@
+---
+- name: Reload MaxScale Service
+  systemd:
+    daemon_reload: yes
+  when:
+    - service_init_status.stat.islnk is defined
+    - service_init_status.stat.islnk
+
+- name: Get MaxScale Service Info
+  shell: service maxscale status | grep not-found || true
+  args:
+    warn: false
+  register: maxscale_service_info
+  when:
+    - service_init_status.stat.exists
+
+- name: Enable MaxScale Service
+  service:
+    name: maxscale
+    enabled: yes
+    state: restarted
+  when:
+    - maxscale_service_info.stdout.find("not-found") == -1
+
+- name: Wait For MaxScale Service
+  wait_for:
+    port: 3306
+    timeout: 15
+    connect_timeout: 3
+    delay: 5
+    state: present

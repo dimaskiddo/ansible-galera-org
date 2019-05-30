@@ -46,14 +46,32 @@
 
 - include: haproxy_packages.yml
   when:
+    - galera_lb_type == 'haproxy'
     - inventory_hostname in groups['galera_lb']
 
 - include: haproxy_services.yml
   when:
+    - galera_lb_type == 'haproxy'
     - inventory_hostname in groups['galera_lb']
 
 - include: haproxy_cleanups.yml
   when:
+    - galera_lb_type == 'haproxy'
+    - inventory_hostname in groups['galera_lb']
+
+- include: maxscale_packages.yml
+  when:
+    - galera_lb_type == 'maxscale'
+    - inventory_hostname in groups['galera_lb']
+
+- include: maxscale_services.yml
+  when:
+    - galera_lb_type == 'maxscale'
+    - inventory_hostname in groups['galera_lb']
+
+- include: maxscale_cleanups.yml
+  when:
+    - galera_lb_type == 'maxscale'
     - inventory_hostname in groups['galera_lb']
 
 - include: python_packages.yml

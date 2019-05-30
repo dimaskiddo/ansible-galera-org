@@ -1,0 +1,8 @@
+---
+- name: Generate MaxScale Configuration
+  template:
+    src: maxscale.cnf.j2
+    dest: /etc/maxscale.cnf
+    owner: root
+    group: root
+    mode: 0644

@@ -3,15 +3,34 @@
 
 - include: haproxy_services.yml
   when:
+    - galera_lb_type == 'haproxy'
     - inventory_hostname in groups['galera_lb']
 
 - include: haproxy_cleanups.yml
   when:
+    - galera_lb_type == 'haproxy'
     - inventory_hostname in groups['galera_lb']
 
 - include: haproxy_packages.yml
   when:
     - full_uninstall
+    - galera_lb_type == 'haproxy'
+    - inventory_hostname in groups['galera_lb']
+
+- include: maxscale_services.yml
+  when:
+    - galera_lb_type == 'maxscale'
+    - inventory_hostname in groups['galera_lb']
+
+- include: maxscale_cleanups.yml
+  when:
+    - galera_lb_type == 'maxscale'
+    - inventory_hostname in groups['galera_lb']
+
+- include: maxscale_packages.yml
+  when:
+    - full_uninstall
+    - galera_lb_type == 'maxscale'
     - inventory_hostname in groups['galera_lb']
 
 - include: galera_services.yml
@@ -38,6 +57,11 @@
     - inventory_hostname in groups['galera_node']
 
 - include: galera_users.yml
+  when:
+    - full_uninstall
+    - inventory_hostname in groups['galera_node']
+
+- include: xinetd_services.yml
   when:
     - full_uninstall
     - inventory_hostname in groups['galera_node']

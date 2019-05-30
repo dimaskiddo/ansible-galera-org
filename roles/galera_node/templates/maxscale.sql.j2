@@ -1,0 +1,22 @@
+USE mysql;
+
+FLUSH PRIVILEGES;
+{% for local_host in ['::1', '127.0.0.1', 'localhost'] %}
+CREATE USER '{{ galera_lb_username }}'@'{{ local_host }}' IDENTIFIED BY '{{ galera_lb_password }}';
+GRANT SHOW DATABASES ON *.* TO '{{ galera_lb_username }}'@'{{ local_host }}' IDENTIFIED BY '{{ galera_lb_password }}';
+GRANT SELECT ON mysql.db TO '{{ galera_lb_username }}'@'{{ local_host }}' IDENTIFIED BY '{{ galera_lb_password }}';
+GRANT SELECT ON mysql.user TO '{{ galera_lb_username }}'@'{{ local_host }}' IDENTIFIED BY '{{ galera_lb_password }}';
+GRANT SELECT ON mysql.tables_priv TO '{{ galera_lb_username }}'@'{{ local_host }}' IDENTIFIED BY '{{ galera_lb_password }}';
+GRANT SELECT ON mysql.roles_mapping TO '{{ galera_lb_username }}'@'{{ local_host }}' IDENTIFIED BY '{{ galera_lb_password }}';
+{{''}}
+{% endfor %}
+{% for lb_host in groups['galera_lb'] %}
+CREATE USER '{{ galera_lb_username }}'@'{{ hostvars[lb_host].galera_ip }}' IDENTIFIED BY '{{ galera_lb_password }}';
+GRANT SHOW DATABASES ON *.* TO '{{ galera_lb_username }}'@'{{ hostvars[lb_host].galera_ip }}' IDENTIFIED BY '{{ galera_lb_password }}';
+GRANT SELECT ON mysql.db TO '{{ galera_lb_username }}'@'{{ hostvars[lb_host].galera_ip }}' IDENTIFIED BY '{{ galera_lb_password }}';
+GRANT SELECT ON mysql.user TO '{{ galera_lb_username }}'@'{{ hostvars[lb_host].galera_ip }}' IDENTIFIED BY '{{ galera_lb_password }}';
+GRANT SELECT ON mysql.tables_priv TO '{{ galera_lb_username }}'@'{{ hostvars[lb_host].galera_ip }}' IDENTIFIED BY '{{ galera_lb_password }}';
+GRANT SELECT ON mysql.roles_mapping TO '{{ galera_lb_username }}'@'{{ hostvars[lb_host].galera_ip }}' IDENTIFIED BY '{{ galera_lb_password }}';
+{{''}}
+{% endfor %}
+FLUSH PRIVILEGES;

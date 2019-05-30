@@ -1,0 +1,48 @@
+# Globals
+[maxscale]
+threads={{ ansible_processor_vcpus * 2 }}
+
+{% for galera_host in groups['galera_node'] %}
+# Server {{ loop.index }}
+[Server-{{ loop.index }}]
+type=server
+protocol=mariadbbackend
+address={{ hostvars[galera_host].galera_ip }}
+port=3306
+{{''}}
+{% endfor %}
+# Monitoring for The Servers
+[Galera-Monitor]
+type=monitor
+module=galeramon
+monitor_interval=1000
+servers={% for galera_host in groups['galera_node'] %}{% if loop.last %}Server-{{ loop.index }}{% else %}Server-{{ loop.index }},{% endif %}{% endfor %}{{''}}
+user={{ galera_lb_username }}
+password={{ galera_lb_password }}
+
+# Galera Cluster Service
+[Galera-Service]
+type=service
+router=readwritesplit
+servers={% for galera_host in groups['galera_node'] %}{% if loop.last %}Server-{{ loop.index }}{% else %}Server-{{ loop.index }},{% endif %}{% endfor %}{{''}}
+user={{ galera_lb_username }}
+password={{ galera_lb_password }}
+
+# Galera Cluster Listener
+[Galera-Listener]
+type=listener
+protocol=mariadbclient
+service=Galera-Service
+port=3306
+
+# MaxAdmin Service
+[MaxAdmin-Service]
+type=service
+router=cli
+
+# MaxAdmin Listener Socket
+[MaxAdmin-Listener-Socket]
+type=listener
+protocol=maxscaled
+service=MaxAdmin-Service
+socket=default

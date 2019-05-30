@@ -1,4 +1,16 @@
 ---
-- include: galera_lb_configs.yml
+- include: galera_lb_haproxy_configs.yml
+  when:
+    - galera_lb_type == 'haproxy'
 
-- include: galera_lb_services.yml
+- include: galera_lb_haproxy_services.yml
+  when:
+    - galera_lb_type == 'haproxy'
+
+- include: galera_lb_maxscale_configs.yml
+  when:
+    - galera_lb_type == 'maxscale'
+
+- include: galera_lb_maxscale_services.yml
+  when:
+    - galera_lb_type == 'maxscale'

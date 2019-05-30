@@ -1,14 +1,22 @@
 ---
-- name: Remove Exsisting Galera Configurations
-  file:
-    path: "{{ item }}"
-    state: absent
+- name: Backing-up Required Galera Configurations
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode }}"
+    remote_src: true
   with_items:
-    - /etc/mysql/conf.d/networks.cnf
-    - /etc/mysql/conf.d/tunning.cnf
-    - /etc/mysql/conf.d/wsrep.cnf
+    - { src: /etc/mysql/debian-start, dest: /tmp/debian-start, mode: '0755' }
+    - { src: /etc/mysql/debian.cnf, dest: /tmp/debian.cnf, mode: '0644' }
+  when:
+    - galera_distribution == 'mariadb-org'
 
-- name: Remove Exsisting Galera Databases
+- name: Remove Exsisting Galera Configurations
+  shell: rm -rf /etc/mysql/*
+  args:
+    warn: false
+
+- name: Remove Exsisting Galera Databases Directory
   shell: rm -rf /var/lib/mysql/*
   args:
     warn: false

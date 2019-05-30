@@ -1,0 +1,30 @@
+---
+- name: Install MaxScale Keyring
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: "{{ item }}"
+    state: present
+  with_items:
+    - "0x8167EE24"
+    - "0xE3C94F49"
+    - "0xcbcb082a1bb943db"
+    - "0xF1656F24C74CD1D8"
+    - "0x135659e928c12247"
+
+- name: Install MaxScale Repository
+  template:
+    src: maxscale.list.j2
+    dest: /etc/apt/sources.list.d/maxscale.list
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Install MaxScale Packages
+  apt:
+    name: "{{ item }}"
+    force_apt_get: yes
+    update_cache: yes
+    dpkg_options: "force-confdef,force-confold,force-confmiss"
+    state: present
+  with_items:
+    - maxscale

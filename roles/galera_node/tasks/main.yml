@@ -6,3 +6,7 @@
 - include: galera_node_services.yml
 
 - include: galera_node_securities.yml
+
+- include: galera_node_maxscale.yml
+  when:
+    - galera_lb_type == 'maxscale'

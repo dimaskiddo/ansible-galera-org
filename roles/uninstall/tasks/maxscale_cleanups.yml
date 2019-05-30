@@ -1,0 +1,38 @@
+---
+- name: Find Exsisting MaxScale Scripts
+  find:
+    paths: /tmp
+    patterns: "maxscale*"
+    use_regex: true
+  register: maxscale_scripts
+
+- name: Remove Exsisting MaxScale Scripts
+  file:
+    path: "{{ item['path'] }}"
+    state: absent
+  with_items:
+    - "{{ maxscale_scripts['files'] }}"
+
+- name: Find Exsisting MaxScale Logs
+  find:
+    paths: /var/log/maxscale
+    patterns: "maxscale*"
+    use_regex: true
+  register: maxscale_logs
+
+- name: Remove Exsisting MaxScale Logs
+  file:
+    path: "{{ item['path'] }}"
+    state: absent
+  with_items:
+    - "{{ maxscale_logs['files'] }}"
+
+- name: Remove Exsisting MaxScale Logs Directory
+  file:
+    path: /var/log/maxscale
+    state: absent
+
+- name: Remove Exsisting MaxScale Configurations
+  file:
+    path: /etc/maxscale.cnf
+    state: absent

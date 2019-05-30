@@ -8,16 +8,21 @@
     recurse: true
   with_items:
     - /var/lib/mysql
+    - /var/lib/mysql/bin
+    - /var/lib/mysql/data
+    - /var/lib/mysql/log
+    - /var/lib/mysql/tmp
 
-- name: Create Galera Logs Directories
+- name: Create Galera Log Files
   file:
     path: "{{ item }}"
-    state: directory
+    state: touch
     owner: mysql
     group: mysql
-    recurse: true
   with_items:
-    - /var/log/mysql
+    - /var/lib/mysql/log/mysql.log
+    - /var/lib/mysql/log/mysql-err.log
+    - /var/lib/mysql/log/mysql-slq.log
 
 - name: Create Galera Run Directory
   file:
@@ -38,3 +43,4 @@
     recurse: true
   with_items:
     - /etc/mysql
+    - /etc/mysql/conf.d

@@ -1,0 +1,24 @@
+---
+- name: Generate Galera MaxScale Privileges Script
+  template:
+    src: maxscale.sql.j2
+    dest: /tmp/maxscale.sql
+    owner: root
+    group: root
+    mode: 0644
+  run_once: true
+
+- name: Initiate Galera MaxScale Privileges
+  mysql_db:
+    login_user: root
+    login_password: "{{ galera_root_password }}"
+    name: all
+    target: /tmp/maxscale.sql
+    state: import
+  run_once: true
+
+- name: Clean-up Generated Script For Intiate Galera MaxScale Privileges
+  file:
+    path: /tmp/maxscale.sql
+    state: absent
+  run_once: true
