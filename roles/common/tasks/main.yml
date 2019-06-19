@@ -7,13 +7,13 @@
 
 - include: zfs_packages.yml
   when:
-    - zfs_backend
     - inventory_hostname in groups['galera_node']
+    - zfs_backend
 
 - include: zfs_blocks.yml
   when:
-    - zfs_backend
     - inventory_hostname in groups['galera_node']
+    - zfs_backend
 
 - include: galera_users.yml
   when:
@@ -33,8 +33,8 @@
 
 - include: zfs_mounts.yml
   when:
-    - zfs_backend
     - inventory_hostname in groups['galera_node']
+    - zfs_backend
 
 - include: galera_directories.yml
   when:
@@ -46,33 +46,33 @@
 
 - include: haproxy_packages.yml
   when:
-    - galera_lb_type == 'haproxy'
     - inventory_hostname in groups['galera_lb']
+    - galera_lb_type == 'haproxy'
 
 - include: haproxy_services.yml
   when:
-    - galera_lb_type == 'haproxy'
     - inventory_hostname in groups['galera_lb']
+    - galera_lb_type == 'haproxy'
 
 - include: haproxy_cleanups.yml
   when:
-    - galera_lb_type == 'haproxy'
     - inventory_hostname in groups['galera_lb']
+    - galera_lb_type == 'haproxy'
 
 - include: maxscale_packages.yml
   when:
-    - galera_lb_type == 'maxscale'
     - inventory_hostname in groups['galera_lb']
+    - galera_lb_type == 'maxscale'
 
 - include: maxscale_services.yml
   when:
-    - galera_lb_type == 'maxscale'
     - inventory_hostname in groups['galera_lb']
+    - galera_lb_type == 'maxscale'
 
 - include: maxscale_cleanups.yml
   when:
-    - galera_lb_type == 'maxscale'
     - inventory_hostname in groups['galera_lb']
+    - galera_lb_type == 'maxscale'
 
 - include: python_packages.yml
 

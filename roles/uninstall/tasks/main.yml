@@ -3,35 +3,35 @@
 
 - include: haproxy_services.yml
   when:
-    - galera_lb_type == 'haproxy'
     - inventory_hostname in groups['galera_lb']
+    - galera_lb_type == 'haproxy'
 
 - include: haproxy_cleanups.yml
   when:
-    - galera_lb_type == 'haproxy'
     - inventory_hostname in groups['galera_lb']
+    - galera_lb_type == 'haproxy'
 
 - include: haproxy_packages.yml
   when:
-    - full_uninstall
-    - galera_lb_type == 'haproxy'
     - inventory_hostname in groups['galera_lb']
+    - galera_lb_type == 'haproxy'
+    - full_uninstall
 
 - include: maxscale_services.yml
   when:
-    - galera_lb_type == 'maxscale'
     - inventory_hostname in groups['galera_lb']
+    - galera_lb_type == 'maxscale'
 
 - include: maxscale_cleanups.yml
   when:
-    - galera_lb_type == 'maxscale'
     - inventory_hostname in groups['galera_lb']
+    - galera_lb_type == 'maxscale'
 
 - include: maxscale_packages.yml
   when:
-    - full_uninstall
-    - galera_lb_type == 'maxscale'
     - inventory_hostname in groups['galera_lb']
+    - galera_lb_type == 'maxscale'
+    - full_uninstall
 
 - include: galera_services.yml
   when:
@@ -43,9 +43,9 @@
 
 - include: zfs_mounts.yml
   when:
-    - full_uninstall
-    - zfs_backend
     - inventory_hostname in groups['galera_node']
+    - zfs_backend
+    - full_uninstall
 
 - include: galera_directories.yml
   when:
@@ -53,23 +53,23 @@
 
 - include: galera_packages.yml
   when:
-    - full_uninstall
     - inventory_hostname in groups['galera_node']
+    - full_uninstall
 
 - include: galera_users.yml
   when:
-    - full_uninstall
     - inventory_hostname in groups['galera_node']
+    - full_uninstall
 
 - include: xinetd_services.yml
   when:
-    - full_uninstall
     - inventory_hostname in groups['galera_node']
+    - full_uninstall
 
 - include: zfs_blocks.yml
   when:
-    - full_uninstall
-    - zfs_backend
     - inventory_hostname in groups['galera_node']
+    - zfs_backend
+    - full_uninstall
 
 - include: os_cleanups.yml
